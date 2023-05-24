@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ADC plot</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <div id="plot"></div>
+
+    <script>
+        var data = {
+            Timestamp: [],
+            Channel0: [],
+            Channel1: [],
+            Channel2: [],
+            Channel3: []
+        };
+
+        // Create the layout object
+        var layout = {
+            title: 'ADC signals',
+            xaxis: {
+                title: 'time',
+                automargin: true,
+                tickformat: '%H:%M:%S',
+            },
+            yaxis: {
+                title: 'Voltage (V)'
+            }
+        };
+
+        function updatePlot() {
+            fetch('/data')
+                .then(response => response.json())
+                .then(newData => {
+                    // Append new data to existing arrays
+                    data.Timestamp.push(...newData.Timestamp);
+                    data.Channel0.push(...newData['Channel 0']);
+                    data.Channel1.push(...newData['Channel 1']);
+                    data.Channel2.push(...newData['Channel 2']);
+                    data.Channel3.push(...newData['Channel 3']);
+
+                    // Limit data to a maximum of 100 points
+                    limitData();
+
+                    // Update the plot with the updated data
+                    Plotly.newPlot(
+                        'plot',
+                        [
+                            { x: data.Timestamp, y: data.Channel0, mode: 'lines', name: 'CH 0' },
+                            { x: data.Timestamp, y: data.Channel1, mode: 'lines', name: 'CH 1' },
+                            { x: data.Timestamp, y: data.Channel2, mode: 'lines', name: 'CH 2' },
+                            { x: data.Timestamp, y: data.Channel3, mode: 'lines', name: 'CH 3' }
+                        ],
+                        layout
+                    );
+                });
+        }
+
+        function limitData() {
+            var maxLength = 100;
+            var length = data.Timestamp.length;
+
+            if (length > maxLength) {
+                var startIndex = length - maxLength;
+                data.Timestamp = data.Timestamp.slice(startIndex);
+                data.Channel0 = data.Channel0.slice(startIndex);
+                data.Channel1 = data.Channel1.slice(startIndex);
+                data.Channel2 = data.Channel2.slice(startIndex);
+                data.Channel3 = data.Channel3.slice(startIndex);
+            }
+        }
+
+        // Call the updatePlot function initially
+        updatePlot();
+
+        // Update the plot every 200 milliseconds
+        setInterval(updatePlot, 500);
+    </script>
+</body>
+
+</html>
