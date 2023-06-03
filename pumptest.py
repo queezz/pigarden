@@ -2,11 +2,19 @@ import RPi.GPIO as GPIO
 import time
 import datetime
 import os
+from argparse import ArgumentParser
+
+parser = ArgumentParser()
+parser.add_argument("-t","--time",dest="wateringtime",type=float)
+args = parser.parse_args()
+print(args.wateringtime)
 
 TEST = True
 TBETWEEN = {"day": 60 * 15, "night": 60 * 60 * 1, "test": 5}
 DRYSTATE = False
-WATERINGTIME = 5.0
+WATERINGTIME = 3
+if args.wateringtime is not None:
+    WATERINGTIME = args.wateringtime 
 
 chn = {"soil0": 17, "soil1": 22, "soil": 27, "soilon": 16, "v1": 20, "v2": 21}
 GPIO.setmode(GPIO.BCM)

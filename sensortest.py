@@ -4,53 +4,30 @@ import datetime
 import os
 
 TEST = True
-TBETWEEN = {"day": 60 * 15, "night": 60 * 60 * 1, "test": 1}
 DRYSTATE = False
-WATERINGTIME = 0.0
+tbetween = 0.5
 
 chn = {"soil0": 17, "soil1": 22, "soil": 27, "soilon": 16, "v1": 20, "v2": 21}
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(chn["soil"], GPIO.IN)
-[GPIO.setup(chn[i], GPIO.OUT) for i in ["soilon", "v1", "v2"]]
-
-[GPIO.output(chn[i], 0) for i in ["v1", "v2"]]
+[GPIO.setup(chn[i], GPIO.OUT) for i in ["soilon"]]
 
 if not os.path.exists("logwater.txt"):
     with open("logwater.txt", "w") as f:
         f.write("")
 try:
+    GPIO.output(chn["soilon"], 1)
     while True:
-        GPIO.output(chn["soilon"], 1)
-        time.sleep(2.2)
         if GPIO.input(chn["soil"]) == 0:
             DRYSTATE = False
-            [GPIO.output(chn[i], 0) for i in ["v1", "v2"]]
         elif GPIO.input(chn["soil"]) == 1:
             DRYSTATE = True
 
-        GPIO.output(chn["soilon"], 0)
-
         now_time = datetime.datetime.now().time()
-        night = now_time >= datetime.time(23, 0) or now_time <= datetime.time(7, 30)
-        if not night:
-            tbetween = TBETWEEN["day"]
-        else:
-            tbetween = TBETWEEN["night"]
-        if TEST:
-            tbetween = TBETWEEN["test"]
 
         s = f"{datetime.datetime.now().strftime('%d %b %Y %H:%M:%S')}"
-        s += f",\tnight = {night},\tDRYSTATE = {DRYSTATE}"
+        s += f",\t{'Soil is Dry' if DRYSTATE else 'Soil is Wet'}"
         print(s)
-        # with open("logwater.txt", "a") as f: f.write(s + "\n")
-
-        if DRYSTATE and WATERINGTIME:
-            print("watering")
-            if not night:
-                print("voltage on")
-                [GPIO.output(chn[i], 1) for i in ["v1", "v2"]]
-                time.sleep(WATERINGTIME)
-                [GPIO.output(chn[i], 0) for i in ["v1", "v2"]]
 
         time.sleep(tbetween)
 
