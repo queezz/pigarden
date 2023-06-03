@@ -7508,3 +7508,4 @@
 03 Jun 2023 17:24:57,	night = False,	DRYSTATE = True
 03 Jun 2023 17:25:01,	night = False,	DRYSTATE = True
 03 Jun 2023 17:25:04,	night = False,	DRYSTATE = True
+03 Jun 2023 17:36:03,	night = False,	DRYSTATE = False

@@ -56,5 +56,7 @@ try:
 
 except Exception as e:
     print(e)
+finally:
+    GPIO.cleanup()
 
 GPIO.cleanup()
