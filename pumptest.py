@@ -15,9 +15,6 @@ GPIO.setup(chn["soil"], GPIO.IN)
 
 [GPIO.output(chn[i], 0) for i in ["v1", "v2"]]
 
-if not os.path.exists("logwater.txt"):
-    with open("logwater.txt", "w") as f:
-        f.write("")
 try:
     print(f"watering for {WATERINGTIME}s")
     print("voltage on")
