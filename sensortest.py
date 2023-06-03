@@ -42,8 +42,7 @@ try:
         s = f"{datetime.datetime.now().strftime('%d %b %Y %H:%M:%S')}"
         s += f",\tnight = {night},\tDRYSTATE = {DRYSTATE}"
         print(s)
-        with open("logwater.txt", "a") as f:
-            f.write(s + "\n")
+        # with open("logwater.txt", "a") as f: f.write(s + "\n")
 
         if DRYSTATE and WATERINGTIME:
             print("watering")
