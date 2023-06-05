@@ -17,6 +17,7 @@ if not os.path.exists("logwater.txt"):
         f.write("")
 try:
     GPIO.output(chn["soilon"], 1)
+    time.sleep(1)
     while True:
         if GPIO.input(chn["soil"]) == 0:
             DRYSTATE = False

@@ -61,11 +61,8 @@ try:
             pump_some_water(WATERING_MORNING)
 
         if DRYSTATE:
-            if not night:
-                print('watering')
-                pump_some_water(WATERINGTIME)
-            else:
-                pump_some_water(1.0)
+            print('watering')
+            pump_some_water(WATERINGTIME)
 
         time.sleep(tbetween)
 
