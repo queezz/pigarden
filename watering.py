@@ -7,8 +7,16 @@ import time
 import datetime
 import os
 
+from argparse import ArgumentParser, BooleanOptionalAction
 
-TEST = True
+parser = ArgumentParser()
+parser.add_argument("--test", dest="test", action=BooleanOptionalAction)
+args = parser.parse_args()
+
+TEST = False
+if args.test:
+    TEST = bool(args.test)
+
 TBETWEEN = {"day": 60 * 30, "night": 60 * 60 * 1, "test": 1}
 DRY = False
 WATERINGTIME = 5.0
